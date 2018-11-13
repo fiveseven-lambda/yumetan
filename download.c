@@ -32,6 +32,7 @@ int main(int argc, char *argv[]){
 		}
 
 		if(!strcmp(word, ":q")){
+			fclose(out);
 			printf("complete\n");
 			return 0;
 		}
@@ -56,7 +57,16 @@ re:
 					tag();
 					if(!strcmp(buf, "span class=\"ind\"")){
 						char ch;
-						while((ch = getc(fp)) != '<') putc(ch, out);
+						while((ch = getc(fp)) != '<'){
+							if(ch != '&') putc(ch, out);
+							else{
+								putc('\'', out);
+								getc(fp);
+								getc(fp);
+								getc(fp);
+								getc(fp);
+							}
+						}
 						putc('\n', out);
 						while(getc(fp) != '>');
 					}
